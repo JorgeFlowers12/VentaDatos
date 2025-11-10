@@ -2,15 +2,11 @@ package com.example.test2;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-// Nada importante
-/**
- * Utilidades de acceso a MySQL.
- * Ajusta URL/USER/PASS si tu entorno es distinto.
- */
+
 public class ConexionBD {
     private static final String URL  = "jdbc:mysql://localhost:3306/gestor_de_ventas?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
     private static final String USER = "root";
-    private static final String PASS = "";
+    private static final String PASS = ""; // sin contraseña (XAMPP por defecto)
 
     public static Connection conectar() {
         try {
@@ -22,7 +18,6 @@ public class ConexionBD {
     }
 
     // ==================== USUARIOS ====================
-
     public static int updateCampoUsuario(int idUsuario, String columna, String valor) {
         final String sql = "UPDATE usuario SET " + columna + " = ? WHERE ID_Usuario = ?";
         try (var cn = conectar(); var ps = cn.prepareStatement(sql)) {
@@ -36,8 +31,6 @@ public class ConexionBD {
     }
 
     // ==================== ADMIN ====================
-
-    /** Crea fila en admin si no existe para ese ID_Usuario. */
     public static void ensureAdminRow(int idUsuario) {
         final String check  = "SELECT COUNT(*) FROM admin WHERE ID_Usuario = ?";
         final String insert = "INSERT INTO admin (ID_Usuario, Rol, Descripcion, Verificador) VALUES (?, '', '', 0)";
@@ -58,7 +51,6 @@ public class ConexionBD {
         }
     }
 
-    /** Para Rol / Descripcion (String). */
     public static int updateCampoAdmin(int idUsuario, String columna, String valor) {
         final String sql = "UPDATE admin SET " + columna + " = ? WHERE ID_Usuario = ?";
         try (var cn = conectar(); var ps = cn.prepareStatement(sql)) {
@@ -71,7 +63,6 @@ public class ConexionBD {
         }
     }
 
-    /** Overload para Verificador (boolean -> tinyint(1)). */
     public static int updateCampoAdmin(int idUsuario, String columna, boolean val) {
         final String sql = "UPDATE admin SET " + columna + " = ? WHERE ID_Usuario = ?";
         try (var cn = conectar(); var ps = cn.prepareStatement(sql)) {
@@ -85,7 +76,6 @@ public class ConexionBD {
     }
 
     // ==================== PRODUCTO ====================
-
     public static int updateCampoProducto(int idProducto, String columna, String valor) {
         final String sql = "UPDATE producto SET " + columna + " = ? WHERE ID_Producto = ?";
         try (var cn = conectar(); var ps = cn.prepareStatement(sql)) {
@@ -99,8 +89,6 @@ public class ConexionBD {
     }
 
     // ==================== INVENTARIO ====================
-
-    /** Crea fila en inventario si no existe para el producto. */
     public static void ensureInventarioRow(int idProducto) {
         final String check  = "SELECT COUNT(*) FROM inventario WHERE ID_Producto = ?";
         final String insert = "INSERT INTO inventario (ID_Producto, Stock, Historial_Movimiento, Editar_Sucursales) " +

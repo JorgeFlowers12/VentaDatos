@@ -9,23 +9,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
-/**
- * Controlador para:
- *  - Tabla de Usuarios (con campos de admin via LEFT JOIN)
- *  - Tabla de Inventario (JOIN producto + inventario)
- *
- * Requisitos de FXML (fx:id):
- *
- *  // USUARIOS
- *  tablaUsuarios, colUsuId, colUsuNombre, colUsuApellido, colUsuEmail, colUsuTelefono,
- *  colUsuRol, colUsuDescripcion, colUsuVerificador
- *
- *  // INVENTARIO
- *  tablaInventario, colProdId, colProdNombre, colProdDescripcion, colProdStock,
- *  colProdHistorial, colProdSucursales
- */
 public class Controlador {
 
     // -------- TABLA USUARIOS (+ ADMIN) --------
@@ -40,20 +26,21 @@ public class Controlador {
     @FXML private TableColumn<Datos, String>   colUsuRol;          // admin.Rol
     @FXML private TableColumn<Datos, String>   colUsuDescripcion;  // admin.Descripcion
     @FXML private TableColumn<Datos, Boolean>  colUsuVerificador;  // admin.Verificador
+    @FXML private TableColumn<Datos, String>   colUsuPassword;     // usuario.Password (NUEVO)
 
     private final ObservableList<Datos> listaUsuarios = FXCollections.observableArrayList();
 
     // -------- TABLA INVENTARIO (PRODUCTO + INVENTARIO) --------
-    @FXML private TableView<ProdInvRow> tablaInventario;
+    @FXML private TableView<Datos.ProdInvRow> tablaInventario;
 
-    @FXML private TableColumn<ProdInvRow, Integer> colProdId;
-    @FXML private TableColumn<ProdInvRow, String>  colProdNombre;
-    @FXML private TableColumn<ProdInvRow, String>  colProdDescripcion;
-    @FXML private TableColumn<ProdInvRow, Integer> colProdStock;
-    @FXML private TableColumn<ProdInvRow, String>  colProdHistorial;
-    @FXML private TableColumn<ProdInvRow, String>  colProdSucursales;
+    @FXML private TableColumn<Datos.ProdInvRow, Integer> colProdId;
+    @FXML private TableColumn<Datos.ProdInvRow, String>  colProdNombre;
+    @FXML private TableColumn<Datos.ProdInvRow, String>  colProdDescripcion;
+    @FXML private TableColumn<Datos.ProdInvRow, Integer> colProdStock;
+    @FXML private TableColumn<Datos.ProdInvRow, String>  colProdHistorial;
+    @FXML private TableColumn<Datos.ProdInvRow, String>  colProdSucursales;
 
-    private final ObservableList<ProdInvRow> listaInventario = FXCollections.observableArrayList();
+    private final ObservableList<Datos.ProdInvRow> listaInventario = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -66,7 +53,7 @@ public class Controlador {
         colUsuRol.setCellValueFactory(new PropertyValueFactory<>("rol"));
         colUsuDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
 
-        // Verificador como property que persiste al cambiar
+        // Verificador con persistencia
         colUsuVerificador.setCellValueFactory(cd -> {
             Datos fila = cd.getValue();
             var prop = new SimpleBooleanProperty(Boolean.TRUE.equals(fila.getVerificador()));
@@ -74,12 +61,24 @@ public class Controlador {
                 fila.setVerificador(newV);
                 ConexionBD.ensureAdminRow(fila.getIdUsuario());
                 int n = ConexionBD.updateCampoAdmin(fila.getIdUsuario(), "Verificador", newV);
-                System.out.println("Verificador guardado? filas=" + n + " id=" + fila.getIdUsuario() + " -> " + (newV?1:0));
+                System.out.println("Verificador guardado? filas=" + n + " id=" + fila.getIdUsuario());
             });
             return prop.asObject();
         });
         colUsuVerificador.setCellFactory(CheckBoxTableCell.forTableColumn(colUsuVerificador));
         colUsuVerificador.setEditable(true);
+
+        // Password
+        colUsuPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
+        colUsuPassword.setCellFactory(col -> new TextFieldTableCell<>(new DefaultStringConverter()) {
+            @Override public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) { setText(null); return; }
+                if (isEditing()) { setText(item == null ? "" : item); return; }
+                if (item == null || item.isEmpty()) { setText(""); return; }
+                setText("•".repeat(Math.min(item.length(), 12))); // enmascarado
+            }
+        });
 
         tablaUsuarios.setItems(listaUsuarios);
         tablaUsuarios.setEditable(true);
@@ -97,6 +96,25 @@ public class Controlador {
         colUsuApellido.setOnEditCommit(e -> editarCampoUsuario(e.getRowValue(), "Apellido", e.getNewValue(), Datos::setApellido));
         colUsuEmail.setOnEditCommit(e -> editarCampoUsuario(e.getRowValue(), "Email",      e.getNewValue(), Datos::setEmail));
         colUsuTelefono.setOnEditCommit(e -> editarCampoUsuario(e.getRowValue(), "Telefono", e.getNewValue(), Datos::setTelefono));
+
+        // Persistencia PASSWORD
+        colUsuPassword.setOnEditCommit(e -> {
+            Datos r = e.getRowValue();
+            String nuevo = e.getNewValue();
+            if (nuevo != null && nuevo.length() > 255) {
+                System.out.println("⚠️ Password muy largo (máx 255).");
+                tablaUsuarios.refresh();
+                return;
+            }
+            int updated = ConexionBD.updateCampoUsuario(r.getIdUsuario(), "Password", nuevo);
+            if (updated == 1) {
+                r.setPassword(nuevo);
+                System.out.println("✅ Password actualizado para ID=" + r.getIdUsuario());
+            } else {
+                System.out.println("⚠️ No se pudo actualizar Password");
+            }
+            tablaUsuarios.refresh();
+        });
 
         // Persistencia ADMIN
         colUsuRol.setOnEditCommit(e -> {
@@ -123,7 +141,7 @@ public class Controlador {
         tablaInventario.setItems(listaInventario);
         tablaInventario.setEditable(true);
 
-        // Editables
+        // Editables inventario
         colProdNombre.setCellFactory(TextFieldTableCell.forTableColumn());
         colProdDescripcion.setCellFactory(TextFieldTableCell.forTableColumn());
         colProdHistorial.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -163,7 +181,7 @@ public class Controlador {
             ConexionBD.updateCampoInventario(r.getIdProducto(), "Editar_Sucursales", e.getNewValue());
         });
 
-        // Cargar datos iniciales
+        // Cargar datos
         cargarUsuarios();
         cargarInventario();
     }
@@ -173,8 +191,8 @@ public class Controlador {
         listaUsuarios.clear();
         final String sql =
                 "SELECT u.ID_Usuario AS idUsuario, u.Nombre AS nombre, u.Apellido AS apellido, " +
-                        "u.Email AS email, u.Telefono AS telefono, " +
-                        "a.Rol AS rol, a.Descripcion AS descripcion, a.Verificador AS verificador " +
+                        "       u.Email AS email, u.Telefono AS telefono, u.Password AS password, " +
+                        "       a.Rol AS rol, a.Descripcion AS descripcion, a.Verificador AS verificador " +
                         "FROM usuario u LEFT JOIN admin a ON a.ID_Usuario = u.ID_Usuario";
 
         try (var cn = ConexionBD.conectar(); var st = cn.createStatement(); var rs = st.executeQuery(sql)) {
@@ -187,7 +205,8 @@ public class Controlador {
                         rs.getString("telefono"),
                         rs.getString("rol"),
                         rs.getString("descripcion"),
-                        (rs.getObject("verificador") == null) ? null : rs.getInt("verificador") == 1
+                        (rs.getObject("verificador") == null) ? null : rs.getInt("verificador") == 1,
+                        rs.getString("password")
                 ));
             }
         } catch (Exception e) {
@@ -207,7 +226,7 @@ public class Controlador {
 
         try (var cn = ConexionBD.conectar(); var st = cn.createStatement(); var rs = st.executeQuery(sql)) {
             while (rs.next()) {
-                listaInventario.add(new ProdInvRow(
+                listaInventario.add(new Datos.ProdInvRow(
                         rs.getInt("ID_Producto"),
                         rs.getString("Nombre"),
                         rs.getString("DESCRIPCION"),

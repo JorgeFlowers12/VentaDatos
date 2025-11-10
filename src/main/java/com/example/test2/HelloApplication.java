@@ -16,8 +16,14 @@ public class HelloApplication extends Application {
         stage.setTitle("Gestion para la tienda");
         stage.setScene(scene);
         stage.show();
-
-        ///
+        /// joooooooooooooooooooooooooooorgiiiiiiiiiiiiiiiiiitooooooooooooooooooooo
+        /// joooooooooooooooooooooooooooorgiiiiiiiiiiiiiiiiiitooooooooooooooooooooo
+        /// joooooooooooooooooooooooooooorgiiiiiiiiiiiiiiiiiitooooooooooooooooooooo
+        /// joooooooooooooooooooooooooooorgiiiiiiiiiiiiiiiiiitooooooooooooooooooooo
+        /// joooooooooooooooooooooooooooorgiiiiiiiiiiiiiiiiiitooooooooooooooooooooo
+        /// joooooooooooooooooooooooooooorgiiiiiiiiiiiiiiiiiitooooooooooooooooooooo
+        /// joooooooooooooooooooooooooooorgiiiiiiiiiiiiiiiiiitooooooooooooooooooooo
+        /// joooooooooooooooooooooooooooorgiiiiiiiiiiiiiiiiiitooooooooooooooooooooo
        ConexionBD.conectar();
     }
 }

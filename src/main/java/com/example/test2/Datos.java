@@ -1,4 +1,3 @@
-// Datos.java
 package com.example.test2;
 
 public class Datos {
@@ -8,19 +7,22 @@ public class Datos {
     private String email;
     private String telefono;
 
-    // --- NUEVOS (tabla admin)
+    // Campos admin
     private String rol;           // admin.Rol
     private String descripcion;   // admin.Descripcion
     private Boolean verificador;  // admin.Verificador (tinyint -> Boolean)
 
-    // Constructor original (sigue sirviendo)
+    // NUEVO: password de usuario
+    private String password;      // usuario.Password
+
+    // Constructor corto (sigue sirviendo)
     public Datos(int idUsuario, String nombre, String apellido, String email, String telefono) {
-        this(idUsuario, nombre, apellido, email, telefono, null, null, null);
+        this(idUsuario, nombre, apellido, email, telefono, null, null, null, null);
     }
 
-    // Constructor nuevo con datos de admin
+    // Constructor completo
     public Datos(int idUsuario, String nombre, String apellido, String email, String telefono,
-                 String rol, String descripcion, Boolean verificador) {
+                 String rol, String descripcion, Boolean verificador, String password) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -29,6 +31,7 @@ public class Datos {
         this.rol = rol;
         this.descripcion = descripcion;
         this.verificador = verificador;
+        this.password = password;
     }
 
     // Getters
@@ -40,6 +43,7 @@ public class Datos {
     public String getRol() { return rol; }
     public String getDescripcion() { return descripcion; }
     public Boolean getVerificador() { return verificador; }
+    public String getPassword() { return password; }
 
     // Setters
     public void setNombre(String v) { this.nombre = v; }
@@ -49,12 +53,10 @@ public class Datos {
     public void setRol(String v) { this.rol = v; }
     public void setDescripcion(String v) { this.descripcion = v; }
     public void setVerificador(Boolean v) { this.verificador = v; }
+    public void setPassword(String v) { this.password = v; }
 
-    // --- tu clase interna ESTÁTICA Inventario la dejas igual ---
-    public static class Inventario {
-        // ... (igual que la que ya tienes)
-    }
-    public class ProdInvRow {
+    // --- Clase de filas para la tabla de inventario (como la usabas)
+    public static class ProdInvRow {
         private int idProducto;
         private String nombre;
         private String descripcion;
