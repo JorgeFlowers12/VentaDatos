@@ -1,5 +1,6 @@
     package com.example.test2;
 
+
     import javafx.event.ActionEvent;
     import javafx.fxml.FXML;
     import javafx.fxml.FXMLLoader;
@@ -7,19 +8,26 @@
     import javafx.scene.Parent;
     import javafx.scene.Scene;
     import javafx.scene.control.PasswordField;
+    import javafx.scene.control.TableColumn;
+    import javafx.scene.control.TableView;
     import javafx.scene.control.TextField;
     import javafx.scene.paint.Color;
     import javafx.scene.text.Text;
     import javafx.stage.Stage;
+    import org.mindrot.jbcrypt.BCrypt;
+
+
 
     import java.sql.Connection;
     import java.sql.PreparedStatement;
+    import java.sql.ResultSet;
 
     public class ControladorVentanas {
 
         private final String sql = "INSERT INTO Usuario " +
-                "(Nombre, Apellido, Email, Telefono, Password, Fecha_creacion_de_cuenta, Admin) " +
-                "VALUES (?, ?, ?, ?, ?, CURDATE(), ?)";
+                "(Id_Usuario, Nombre, Apellido, Email, Telefono, Password, Fecha_creacion_de_cuenta, Admin) " +
+                "VALUES (?, ?, ?, ?, ?, ?, CURDATE(), ?)";
+
 
         // -------------------------------
         // 🔹 Campos del formulario (FXML)
@@ -33,8 +41,15 @@
         @FXML private PasswordField txtPassword;
         @FXML private PasswordField txtRepetirPassword;
         @FXML private Text textoerror;
-        // -------------------------------
+        @FXML private Text textoerrorLogin;
+        @FXML private TextField txtnombrecuenta;
+        @FXML private TextField txtpassword2;
 
+        // -------------------------------
+// tabla
+
+
+        //
 
         // =============================
         // 🔸 MÉTODO DEL BOTÓN REGISTRAR
@@ -42,7 +57,7 @@
         @FXML
 
             private void RegistroTablaUsuario() {
-
+                String Id_Usuario = txtRut.getText().trim();
                 String nombre = txtNombre.getText().trim();
                 String apellido = txtApellido.getText().trim();
                 String correo = txtCorreo.getText().trim();
@@ -62,18 +77,19 @@
                     textoerror.setText("❌ Las contraseñas no coinciden");
                     return;
                 }
+            String hashedPassword = BCrypt.hashpw(pass1, BCrypt.gensalt());
 
                 try (Connection conn = ConexionBD.conectar();
                      PreparedStatement stmt = conn.prepareStatement(sql)) {
 
                     // OJO: ahora empiezas desde Nombre, ya no envías Id_Usuario
-                    stmt.setString(1, nombre);
-                    stmt.setString(2, apellido);
-                    stmt.setString(3, correo);
-                    stmt.setString(4, telefono);
-                    stmt.setString(5, pass1);
-                    stmt.setInt(6, 0);   // Admin = 0
-
+                    stmt.setInt(1, Integer.parseInt(Id_Usuario));  // Id_Usuario (RUT)
+                    stmt.setString(2, nombre);
+                    stmt.setString(3, apellido);
+                    stmt.setString(4, correo);
+                    stmt.setString(5, telefono);
+                    stmt.setString(6, hashedPassword);
+                    stmt.setInt(7, 0); // Admin = 0
                     stmt.executeUpdate();
 
 
@@ -87,7 +103,63 @@
                     e.printStackTrace();
                 }
             }
+        @FXML
+        private void iniciarSesion(ActionEvent event) {
 
+            String identificador = txtnombrecuenta.getText().trim();
+            String passwordIngresada = txtpassword2.getText();
+
+            if (identificador.isEmpty() || passwordIngresada.isEmpty()) {
+                textoerrorLogin.setText("❌ Debe ingresar usuario y contraseña");
+                textoerrorLogin.setFill(Color.web("#ff4444"));
+                return;
+            }
+
+            int idUsuarioBuscado = -1;
+            try { idUsuarioBuscado = Integer.parseInt(identificador); } catch (Exception ignored) {}
+
+            String sqlLogin = """
+        SELECT Id_Usuario, Nombre, Password
+        FROM Usuario
+        WHERE Email = ? OR Telefono = ? OR Id_Usuario = ?
+        LIMIT 1
+        """;
+
+            try (Connection conn = ConexionBD.conectar();
+                 PreparedStatement stmt = conn.prepareStatement(sqlLogin)) {
+
+                stmt.setString(1, identificador);
+                stmt.setString(2, identificador);
+                stmt.setInt(3, idUsuarioBuscado);
+
+                ResultSet rs = stmt.executeQuery();
+
+                if (!rs.next()) {
+                    textoerrorLogin.setText("❌ Usuario no encontrado");
+                    textoerrorLogin.setFill(Color.web("#ff4444"));
+                    return;
+                }
+
+                String passHash = rs.getString("Password");
+
+                if (!BCrypt.checkpw(passwordIngresada, passHash)) {
+                    textoerrorLogin.setText("❌ Contraseña incorrecta");
+                    textoerrorLogin.setFill(Color.web("#ff4444"));
+                    return;
+                }
+
+                textoerrorLogin.setText("✔ Sesión iniciada. Bienvenido!");
+                textoerrorLogin.setFill(Color.web("#22bc43"));
+
+                // ⭐ Cambiar a la ventana del menú
+                menuventa(event);
+
+            } catch (Exception e) {
+                textoerrorLogin.setText("❌ Error al iniciar sesión");
+                textoerrorLogin.setFill(Color.web("#ff4444"));
+                e.printStackTrace();
+            }
+        }
         // =============================
         // 🔹 LIMPIAR CAMPOS
         // =============================
@@ -144,5 +216,8 @@
         @FXML
         private  void Registrarboton(ActionEvent event) {
             cambiarAVentana("registrarte",event);
+        }
+        private void menuventa(ActionEvent event) {
+            cambiarAVentana("MenuMuebles",event);
         }
     }
