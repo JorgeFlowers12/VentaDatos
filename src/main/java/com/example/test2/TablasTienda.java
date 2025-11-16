@@ -3,13 +3,17 @@ package com.example.test2;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -151,11 +155,7 @@ public class TablasTienda implements Initializable {
     }
 
     private void actualizarTotal() {
-        int total = 0;
-        for (ItemCarrito item : listaCarrito) {
-            total += item.getPrecio() * item.getCantidad();
-        }
-
+        int total = calcularTotalCarrito();
         if (lblMontoTotal != null) {
             lblMontoTotal.setText("Monto Total $ " + total);
         }
@@ -230,6 +230,59 @@ public class TablasTienda implements Initializable {
                     }
                 });
     }
+
+    // ==========================
+    //  IR A PAGAR
+    // ==========================
+    @FXML
+    private void irAPagar() {
+        // No dejar pasar si el carrito está vacío
+        if (listaCarrito.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Carrito vacío");
+            alert.setHeaderText(null);
+            alert.setContentText("Debes agregar al menos un producto al carrito antes de pagar.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ZonaDePago.fxml"));
+            Parent root = loader.load();
+
+            // Obtener el controlador de la Zona de Pago
+            ZonaPagoController controller = loader.getController();
+
+            // Pasar carrito y total
+            int total = calcularTotalCarrito();
+            controller.setCarritoYTotal(
+                    FXCollections.observableArrayList(listaCarrito), // copia
+                    total
+            );
+            // Si más adelante tienes idUsuario dinámico, lo pasas aquí:
+            // controller.setIdUsuario(idUsuarioLogueado);
+
+            // Abrir nueva ventana
+            Stage stage = new Stage();
+            stage.setTitle("Zona de Pago");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            // (Opcional) cerrar esta ventana:
+            // tablaProductos.getScene().getWindow().hide();
+
+        } catch (Exception e) {
+            System.out.println("❌ Error al abrir Zona de Pago: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private int calcularTotalCarrito() {
+        int total = 0;
+        for (ItemCarrito item : listaCarrito) {
+            total += item.getPrecio() * item.getCantidad();
+        }
+        return total;
+    }
+
 }
-
-

@@ -85,6 +85,6 @@
 
         <Text fx:id="lblMontoTotal" fill="#138025" layoutX="358.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Monto Total $ 0" />
 
-        <Button layoutX="430.0" layoutY="349.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="116.0" style="-fx-background-color: #65BA6D;" text="Ir a pagar" />
+        <Button fx:id="btnIrAPagar" layoutX="430.0" layoutY="349.0" mnemonicParsing="false" onAction="#irAPagar" prefHeight="46.0" prefWidth="116.0" style="-fx-background-color: #65BA6D;" text="Ir a pagar" />
     </children>
 </AnchorPane>
