@@ -229,4 +229,8 @@
         private void VerRegistrosUsuarios(ActionEvent event){
             cambiarAVentana("TablaUsuarios",event);
         }
+        @FXML
+        private void VerBoletas(ActionEvent event){
+            cambiarAVentana("VerBoletas",event);
+        }
     }

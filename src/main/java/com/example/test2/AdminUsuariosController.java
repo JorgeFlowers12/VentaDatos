@@ -3,10 +3,14 @@ package com.example.test2;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -394,6 +398,23 @@ public class AdminUsuariosController implements Initializable {
             e.printStackTrace();
             if (lblMensaje != null)
                 lblMensaje.setText("Error al eliminar (puede tener ventas asociadas)");
+        }
+    }
+    @FXML
+    private Button salirboton1;
+    @FXML
+    private void VolverMenu2() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("ventanaIniciadalista.fxml"));
+
+
+            Stage stage = (Stage) salirboton1.getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

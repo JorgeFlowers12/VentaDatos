@@ -7,10 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -284,5 +281,24 @@ public class TablasTienda implements Initializable {
         }
         return total;
     }
+    @FXML
+    private Button btnVolver; // ← usa el botón real que tengas en tu FXML
+    @FXML
+    private void volverMenu1() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("ventanaIniciadalista.fxml"));
+
+            // Obtener la ventana actual desde el botón
+            Stage stage = (Stage) btnVolver.getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }
