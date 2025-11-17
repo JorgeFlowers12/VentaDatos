@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: D4B277;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.test2.BoletaController">
+
+    <children>
+        <Circle fill="#84a14a" layoutX="6.0" layoutY="14.0" opacity="0.12" radius="133.0" stroke="BLACK" strokeType="INSIDE" />
+        <Rectangle arcHeight="5.0" arcWidth="5.0" height="409.0" layoutX="-6.0" layoutY="-4.0" opacity="0.12" stroke="BLACK" strokeType="INSIDE" width="610.0">
+            <fill>
+                <LinearGradient endX="1.0" endY="1.0">
+                    <stops>
+                        <Stop>
+                            <color><Color /></color>
+                        </Stop>
+                        <Stop offset="1.0">
+                            <color><Color red="1.0" green="1.0" blue="1.0" /></color>
+                        </Stop>
+                    </stops>
+                </LinearGradient>
+            </fill>
+        </Rectangle>
+
+        <Text fx:id="textoerror" fill="#861111" layoutX="42.0" layoutY="368.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="266.0">
+            <font><Font name="Sitka Display" size="18.0" /></font>
+        </Text>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="409.0" layoutX="-5.0" layoutY="-2.0" opacity="0.12" stroke="BLACK" strokeType="INSIDE" width="610.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
+
+        <Text layoutX="167.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Boleta" textAlignment="CENTER" wrappingWidth="266.0">
+            <font><Font name="Sitka Display" size="31.0" /></font>
+        </Text>
+      <TextArea fx:id="txtBoleta" layoutX="174.0" layoutY="74.0" prefHeight="310.0" prefWidth="252.0" />
+      <Text layoutX="116.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Compra realizada con exito" textAlignment="CENTER" wrappingWidth="369.0">
+         <font>
+            <Font name="Sitka Display" size="31.0" />
+         </font>
+      </Text>
+    </children>
+</AnchorPane>
