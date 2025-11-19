@@ -285,7 +285,7 @@ public class ZonaPagoController implements Initializable {
                 stmtStock.executeBatch();
             }
 
-            // Si todo salió bien, mostramos boleta
+            // muestra boleta
             abrirVentanaBoleta(
                     idBoletaGenerada,
                     nombreSucursalUsuario,   // <- nombre sucursal del usuario

@@ -209,7 +209,7 @@ public class TablasTienda implements Initializable {
             tablaProductos.setItems(listaProductos);
 
         } catch (Exception e) {
-            System.out.println("❌ Error cargando productos: " + e.getMessage());
+            System.out.println("Error cargando productos: " + e.getMessage());
             e.printStackTrace();
         }
     }
