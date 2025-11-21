@@ -6,10 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -37,7 +34,7 @@ public class ControladorVentanas {
 
     @FXML private PasswordField txtPassword;
     @FXML private PasswordField txtRepetirPassword;
-
+    @FXML private Hyperlink RegistroMuebleslink;
     @FXML private Text textoerror;
     @FXML private Text textoerrorLogin;
 
@@ -60,6 +57,11 @@ public class ControladorVentanas {
             registrousuariooo.setDisable(!esAdmin);
             registrousuariooo.setVisible(esAdmin);
             registrousuariooo.setManaged(esAdmin);
+            /// -----------------------
+            /// -----------------------
+            RegistroMuebleslink.setDisable(false);
+
+
         }
 
         // 2) Filtro para RUT: solo dígitos, máximo 9
@@ -323,7 +325,7 @@ public class ControladorVentanas {
 
     @FXML
     private void regresarmenuprincipal(ActionEvent event) {
-        cambiarAVentana("pantalla_iniciarsesion",event);
+        cambiarAVentana("VentanaLoginV2",event);
     }
 
     @FXML
@@ -333,7 +335,7 @@ public class ControladorVentanas {
 
     @FXML
     public void menuventa(ActionEvent event) {
-        cambiarAVentana("VentanaIniciadalista",event);
+        cambiarAVentana("MenuiniciadasesionListoV2",event);
     }
 
     @FXML
@@ -349,7 +351,14 @@ public class ControladorVentanas {
             System.out.println("No eres admin");
         }
     }
+@FXML
+private void VentanaRegistroDeMuebles(ActionEvent event){
+        if (UsuarioSesion.isAdmin()){
 
+            cambiarAVentana("VentanaGrafico",event);
+        }
+
+}
     @FXML
     private void VerBoletas(ActionEvent event){
         cambiarAVentana("VerBoletas",event);
