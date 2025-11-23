@@ -1,6 +1,6 @@
 package com.example.test2;
 
-/// Clase que maneja los datos de la sesion actual de el usuario
+/// Clase que maneja los datos de la sesion actual de el usuario.
 public class UsuarioSesion {
 
     /// ID del usuario en la sesion actual
