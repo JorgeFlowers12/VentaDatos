@@ -50,7 +50,7 @@ public class ZonaPagoController implements Initializable {
         configurarTablaCarrito();
         configurarDescripcion();
         cargarMetodosPago();
-        cargarDatosUsuarioYSucursal();   // <<< NUEVO: carga sucursal desde la cuenta
+        cargarDatosUsuarioYSucursal();   // carga sucursal desde la cuenta
         actualizarTextoTotal();          // por si llega 0 al inicio
     }
 
@@ -63,8 +63,6 @@ public class ZonaPagoController implements Initializable {
         actualizarTextoTotal();
     }
 
-    // Si quieres, puedes seguir usando esto, pero ahora también
-    // cargamos el usuario desde UsuarioSesion en initialize()
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
@@ -114,7 +112,6 @@ public class ZonaPagoController implements Initializable {
         idUsuario = UsuarioSesion.getIdUsuario();
 
         if (idUsuario <= 0) {
-            // Si por alguna razón no hay sesión, se puede manejar acá
             mostrarAlerta(Alert.AlertType.ERROR,
                     "Sesión",
                     "No se encontró un usuario logueado. Inicie sesión nuevamente.");
@@ -138,7 +135,6 @@ public class ZonaPagoController implements Initializable {
                     idSucursalUsuario = rs.getInt("Id_Sucursales");
                     nombreSucursalUsuario = rs.getString("localidad");
 
-                    // Si la sucursal es NULL o 0, avisamos
                     if (rs.wasNull() || idSucursalUsuario == 0 || nombreSucursalUsuario == null) {
                         mostrarAlerta(Alert.AlertType.WARNING,
                                 "Sucursal no definida",
@@ -181,7 +177,6 @@ public class ZonaPagoController implements Initializable {
         String direccion = txtDireccion.getText().trim();
         String rutTexto = txtRutCliente.getText().trim();
 
-        // Verificar que tenemos sucursal del usuario
         if (idSucursalUsuario <= 0 || nombreSucursalUsuario == null || nombreSucursalUsuario.isEmpty()) {
             mostrarAlerta(Alert.AlertType.ERROR,
                     "Sucursal no definida",
@@ -222,7 +217,7 @@ public class ZonaPagoController implements Initializable {
                      sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
 
             stmtVenta.setInt(1, idUsuario);
-            stmtVenta.setInt(2, idSucursalUsuario);           // <- sucursal del usuario
+            stmtVenta.setInt(2, idSucursalUsuario);
             stmtVenta.setInt(3, totalAPagar);
             stmtVenta.setString(4, metodo);
             stmtVenta.setString(5, direccion.isEmpty() ? null : direccion);
@@ -247,12 +242,12 @@ public class ZonaPagoController implements Initializable {
             }
 
             // ==========================
-            // 2) Insertar en DETALLES_VENTAS
+            // 2) Insertar en DETALLES_VENTAS (SIN historial_movimiento)
             // ==========================
             String sqlDetalles = """
                 INSERT INTO detalles_ventas
-                (Id_Boleta, Id_Producto, Cantidad_de_compras, Historial_de_movimiento)
-                VALUES (?, ?, ?, ?)
+                (Id_Boleta, Id_Producto, Cantidad_de_compras)
+                VALUES (?, ?, ?)
                 """;
 
             try (PreparedStatement stmtDet = conn.prepareStatement(sqlDetalles)) {
@@ -261,9 +256,6 @@ public class ZonaPagoController implements Initializable {
                     stmtDet.setInt(1, idBoletaGenerada);
                     stmtDet.setInt(2, item.getIdProducto());
                     stmtDet.setInt(3, item.getCantidad());
-                    stmtDet.setString(4,
-                            "Venta " + idBoletaGenerada + " - " + item.getCantidad() +
-                                    " x " + item.getNombre());
                     stmtDet.addBatch();
                 }
 
@@ -288,7 +280,7 @@ public class ZonaPagoController implements Initializable {
             // muestra boleta
             abrirVentanaBoleta(
                     idBoletaGenerada,
-                    nombreSucursalUsuario,   // <- nombre sucursal del usuario
+                    nombreSucursalUsuario,
                     metodo,
                     rutTexto,
                     direccion,
@@ -319,7 +311,6 @@ public class ZonaPagoController implements Initializable {
 
             BoletaController controller = loader.getController();
 
-            // Construimos el texto de la boleta
             String textoBoleta = construirTextoBoleta(
                     idBoleta,
                     nombreSucursal,
@@ -332,8 +323,7 @@ public class ZonaPagoController implements Initializable {
 
             controller.setTextoBoleta(textoBoleta);
 
-            // ★★ REEMPLAZAR VENTANA ★★
-            // Obtiene la ventana donde está el botón pagar
+            // REEMPLAZAR VENTANA
             Stage stage = (Stage) lblMontoTotal.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -344,7 +334,6 @@ public class ZonaPagoController implements Initializable {
                     "Error", "No se pudo abrir la boleta.");
         }
     }
-
 
     private String construirTextoBoleta(int idBoleta,
                                         String nombreSucursal,
@@ -395,3 +384,4 @@ public class ZonaPagoController implements Initializable {
     }
 
 }
+

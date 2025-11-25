@@ -285,7 +285,7 @@ public class TablasTienda implements Initializable {
     @FXML
     private void volverMenu1() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("ventanaIniciadalista.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("MenuIniciadasesionListoV2.fxml"));
 
             // Obtener la ventana actual desde el botón
             Stage stage = (Stage) btnVolver.getScene().getWindow();

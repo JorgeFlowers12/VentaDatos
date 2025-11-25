@@ -1,107 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: D4B277;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.test2.ZonaPagoController">
+<StackPane prefHeight="600.0" prefWidth="900.0"
+           style="-fx-background-color: linear-gradient(to bottom, #141e30, #243b55);"
+           xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.test2.ZonaPagoController">
 
     <children>
-        <Circle fill="#84a14a" layoutX="6.0" layoutY="14.0" opacity="0.12" radius="133.0" stroke="BLACK" strokeType="INSIDE" />
-        <Rectangle arcHeight="5.0" arcWidth="5.0" height="244.0" layoutX="-59.0" layoutY="34.0" opacity="0.12" stroke="BLACK" strokeType="INSIDE" width="663.0">
-            <fill>
-                <LinearGradient endX="1.0" endY="1.0">
-                    <stops>
-                        <Stop>
-                            <color><Color /></color>
-                        </Stop>
-                        <Stop offset="1.0">
-                            <color><Color red="1.0" green="1.0" blue="1.0" /></color>
-                        </Stop>
-                    </stops>
-                </LinearGradient>
-            </fill>
-        </Rectangle>
 
-        <Text layoutX="323.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Metodo de Pago" textAlignment="CENTER" wrappingWidth="266.0">
-            <font><Font name="Sitka Display" size="25.0" /></font>
-        </Text>
+        <VBox alignment="CENTER" spacing="20">
+            <padding>
+                <Insets top="20" bottom="20"/>
+            </padding>
 
-        <Button layoutX="427.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: B8695E;" text="Volver" textFill="#282822" />
+            <!-- Tarjeta moderna -->
+            <StackPane maxWidth="750" maxHeight="500">
+                <children>
 
-        <Text fx:id="textoerror" fill="#861111" layoutX="42.0" layoutY="368.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="266.0">
-            <font><Font name="Sitka Display" size="18.0" /></font>
-        </Text>
+                    <Rectangle width="750" height="500"
+                               arcWidth="30" arcHeight="30"
+                               style="-fx-fill: rgba(15,22,40,0.96);">
+                        <effect><Bloom/></effect>
+                    </Rectangle>
 
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7c4c18" height="123.0" layoutY="279.0" opacity="0.35" stroke="#b5a359" strokeType="INSIDE" width="350.0" />
+                    <BorderPane>
+                        <padding>
+                            <Insets top="25" left="30" right="30" bottom="25" />
+                        </padding>
 
-        <TextArea fx:id="txtDescripcion" editable="false" layoutX="11.0" layoutY="314.0" prefHeight="81.0" prefWidth="329.0" style="-fx-background-color: #6E511E;">
-            <effect>
-                <ColorAdjust brightness="-0.26" contrast="0.07" hue="-0.41" saturation="-0.35" />
-            </effect>
-        </TextArea>
+                        <!-- TOP: Título + Volver -->
+                        <top>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <children>
 
-        <Text layoutX="43.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descripcion" textAlignment="CENTER" wrappingWidth="266.0">
-            <font><Font name="Sitka Display" size="31.0" /></font>
-        </Text>
+                                    <Text text="Método de Pago"
+                                          style="-fx-fill: white;">
+                                        <font>
+                                            <Font size="28.0" />
+                                        </font>
+                                    </Text>
 
-        <Text fx:id="lblMontoTotal" fill="#138025" layoutX="421.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Monto Total $ 0">
-         <font>
-            <Font size="19.0" />
-         </font></Text>
+                                    <Region HBox.hgrow="ALWAYS"/>
 
-        <Button layoutX="421.0" layoutY="318.0" mnemonicParsing="false" onAction="#realizarPago" prefHeight="46.0" prefWidth="134.0" style="-fx-background-color: #65BA6D;" text="Realizar Pago" />
-      <ComboBox fx:id="comboMetodoPago" layoutX="381.0" layoutY="166.0" prefWidth="150.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="282.0" layoutX="-5.0" layoutY="-2.0" opacity="0.12" stroke="BLACK" strokeType="INSIDE" width="320.0">
-         <fill>
-            <LinearGradient endX="1.0" endY="1.0">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </fill>
-      </Rectangle>
-      <TextField fx:id="txtRutCliente" layoutX="300.0" layoutY="236.0" prefHeight="25.0" prefWidth="142.0" />
+                                    <!-- Si tienes un método en el controller, ponle onAction="#NombreMetodo" -->
+                                    <Button text="Volver"
+                                            style="-fx-background-color: #c94c4c;
+                                                   -fx-text-fill: white;
+                                                   -fx-background-radius: 8;
+                                                   -fx-padding: 8 18;
+                                                   -fx-font-weight: bold;"/>
+                                </children>
+                            </HBox>
+                        </top>
 
-        <!-- Tabla del carrito -->
-        <TableView fx:id="tablaCarrito" layoutX="67.0" layoutY="17.0" prefHeight="244.0" prefWidth="218.0">
-            <columns>
-                <TableColumn fx:id="colNombreCarrito" editable="false" prefWidth="90.0" text="carrito" />
-                <TableColumn fx:id="colPrecioCarrito" editable="false" prefWidth="60.0" text="Precios" />
-            <TableColumn fx:id="colCantidadCarrito" editable="false" prefWidth="70.0" text="Cantidad" />
-            </columns>
-        </TableView>
-      <Text layoutX="242.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rut (opcional)" textAlignment="CENTER" wrappingWidth="266.0">
-         <font>
-            <Font name="Sitka Display" size="25.0" />
-         </font>
-      </Text>
-      <TextField fx:id="txtDireccion" layoutX="456.0" layoutY="236.0" prefHeight="25.0" prefWidth="142.0" />
-      <Text layoutX="394.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Direccion" textAlignment="CENTER" wrappingWidth="266.0">
-         <font>
-            <Font name="Sitka Display" size="25.0" />
-         </font>
-      </Text>
+                        <!-- CENTER -->
+                        <center>
+                            <HBox spacing="25">
+                                <children>
+
+                                    <!-- TABLA DEL CARRITO -->
+                                    <VBox spacing="10">
+                                        <children>
+                                            <Text text="Carrito"
+                                                  style="-fx-fill: #9faac7;">
+                                                <font>
+                                                    <Font size="15.0" />
+                                                </font>
+                                            </Text>
+
+                                            <TableView fx:id="tablaCarrito"
+                                                       prefHeight="330"
+                                                       prefWidth="260"
+                                                       style="-fx-background-color: transparent;
+                                                              -fx-control-inner-background: rgba(10,17,35,0.9);
+                                                              -fx-border-color: #1391EB;
+                                                              -fx-border-radius: 10;
+                                                              -fx-background-radius: 10;">
+                                                <columns>
+                                                    <TableColumn fx:id="colNombreCarrito" text="Producto" prefWidth="120"/>
+                                                    <TableColumn fx:id="colPrecioCarrito" text="Precio" prefWidth="70"/>
+                                                    <TableColumn fx:id="colCantidadCarrito" text="Cant." prefWidth="60"/>
+                                                </columns>
+                                            </TableView>
+                                        </children>
+                                    </VBox>
+
+                                    <!-- DERECHA: FORMULARIO DE PAGO -->
+                                    <VBox spacing="16">
+                                        <children>
+
+                                            <!-- MÉTODO DE PAGO -->
+                                            <Text text="Seleccionar método"
+                                                  style="-fx-fill: #9faac7;">
+                                                <font><Font size="14.0"/></font>
+                                            </Text>
+                                            <ComboBox fx:id="comboMetodoPago"
+                                                      prefWidth="200"
+                                                      style="-fx-background-radius: 8;
+                                                             -fx-background-color: #111828;
+                                                             -fx-text-fill: white;"/>
+
+                                            <!-- RUT -->
+                                            <Text text="Rut (opcional)"
+                                                  style="-fx-fill: #9faac7;">
+                                                <font><Font size="14.0"/></font>
+                                            </Text>
+                                            <TextField fx:id="txtRutCliente"
+                                                       prefWidth="200"
+                                                       style="-fx-background-radius: 8;
+                                                              -fx-background-color: #111828;
+                                                              -fx-text-fill: white;"/>
+
+                                            <!-- DIRECCIÓN -->
+                                            <Text text="Dirección"
+                                                  style="-fx-fill: #9faac7;">
+                                                <font><Font size="14.0"/></font>
+                                            </Text>
+                                            <TextField fx:id="txtDireccion"
+                                                       prefWidth="200"
+                                                       style="-fx-background-radius: 8;
+                                                              -fx-background-color: #111828;
+                                                              -fx-text-fill: white;"/>
+
+                                            <!-- DESCRIPCIÓN -->
+                                            <Text text="Descripción"
+                                                  style="-fx-fill: #9faac7;">
+                                                <font><Font size="14.0"/></font>
+                                            </Text>
+                                            <TextArea fx:id="txtDescripcion"
+                                                      prefWidth="260"
+                                                      prefHeight="90"
+                                                      style="-fx-background-radius: 8;
+                                                             -fx-control-inner-background: #111828;
+                                                             -fx-text-fill: white;"/>
+
+                                            <!-- MONTO TOTAL -->
+                                            <Text fx:id="lblMontoTotal"
+                                                  text="Monto Total $ 0"
+                                                  style="-fx-fill: #37cf6b;">
+                                                <font>
+                                                    <Font size="18.0" />
+                                                </font>
+                                            </Text>
+
+                                            <!-- ERROR -->
+                                            <Text fx:id="textoerror"
+                                                  text=""
+                                                  style="-fx-fill: #ff5757;">
+                                                <font>
+                                                    <Font size="14.0" />
+                                                </font>
+                                            </Text>
+
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+                        </center>
+
+                        <!-- BOTTOM: botón pagar -->
+                        <bottom>
+                            <HBox alignment="CENTER_RIGHT">
+                                <children>
+                                    <Button text="Realizar Pago"
+                                            onAction="#realizarPago"
+                                            style="-fx-background-color: #4caf50;
+                                                   -fx-background-radius: 10;
+                                                   -fx-text-fill: white;
+                                                   -fx-font-weight: bold;
+                                                   -fx-padding: 10 20;"/>
+                                </children>
+                            </HBox>
+                        </bottom>
+
+                    </BorderPane>
+
+                </children>
+            </StackPane>
+
+        </VBox>
+
     </children>
-</AnchorPane>
+
+</StackPane>

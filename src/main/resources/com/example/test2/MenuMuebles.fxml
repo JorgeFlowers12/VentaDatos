@@ -1,90 +1,218 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: D4B277;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.test2.TablasTienda">
+<StackPane prefHeight="600.0" prefWidth="900.0"
+           style="-fx-background-color: linear-gradient(to bottom, #141e30, #243b55);"
+           xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.test2.TablasTienda">
 
     <children>
-        <Circle fill="#84a14a" layoutX="6.0" layoutY="14.0" opacity="0.12" radius="133.0" stroke="BLACK" strokeType="INSIDE" />
-        <Rectangle arcHeight="5.0" arcWidth="5.0" height="244.0" layoutX="-59.0" layoutY="34.0" opacity="0.12" stroke="BLACK" strokeType="INSIDE" width="663.0">
-            <fill>
-                <LinearGradient endX="1.0" endY="1.0">
-                    <stops>
-                        <Stop>
-                            <color><Color /></color>
-                        </Stop>
-                        <Stop offset="1.0">
-                            <color><Color red="1.0" green="1.0" blue="1.0" /></color>
-                        </Stop>
-                    </stops>
-                </LinearGradient>
-            </fill>
-        </Rectangle>
+        <!-- Contenedor principal centrado -->
+        <StackPane maxWidth="780.0" maxHeight="520.0">
+            <children>
 
-        <Text layoutX="78.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Muebles" textAlignment="CENTER" wrappingWidth="266.0">
-            <font><Font name="Sitka Display" size="25.0" /></font>
-        </Text>
+                <!-- Tarjeta oscura -->
+                <Rectangle width="780.0" height="520.0"
+                           arcWidth="28.0" arcHeight="28.0"
+                           style="-fx-fill: rgba(15,22,40,0.96);">
+                    <effect><Bloom/></effect>
+                </Rectangle>
 
-        <Button fx:id="btnVolver" layoutX="427.0" layoutY="2.0" mnemonicParsing="false" onAction="#volverMenu1" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: B8695E;" text="Volver" textFill="#282822" />
+                <BorderPane>
+                    <padding>
+                        <Insets top="20.0" right="24.0" bottom="18.0" left="24.0"/>
+                    </padding>
 
-        <Text fx:id="textoerror" fill="#861111" layoutX="42.0" layoutY="368.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="266.0">
-            <font><Font name="Sitka Display" size="18.0" /></font>
-        </Text>
+                    <!-- TOP: título + volver + monto total -->
+                    <top>
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <Text text="Muebles"
+                                      style="-fx-fill: white;">
+                                    <font><Font size="26.0"/></font>
+                                </Text>
 
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7c4c18" height="123.0" layoutX="22.0" layoutY="278.0" opacity="0.35" stroke="#b5a359" strokeType="INSIDE" width="378.0" />
+                                <Region HBox.hgrow="ALWAYS"/>
 
-        <!-- Tabla de productos -->
-        <TableView fx:id="tablaProductos" layoutX="25.0" layoutY="69.0" prefHeight="202.0" prefWidth="352.0">
-            <columns>
-                <TableColumn fx:id="colId" editable="false" prefWidth="50.0" text="ID" />
-                <TableColumn fx:id="colNombre" editable="false" prefWidth="75.0" text="Nombre" />
-                <TableColumn fx:id="colCategoria" editable="false" prefWidth="75.0" text="Categoria" />
-                <TableColumn fx:id="colCantidad" editable="false" prefWidth="75.0" text="Cantidad" />
-                <TableColumn fx:id="colPrecio" editable="false" prefWidth="75.0" text="Precio" />
-            </columns>
-        </TableView>
+                                <!-- Monto total -->
+                                <Text fx:id="lblMontoTotal"
+                                      text="Monto Total $ 0"
+                                      style="-fx-fill: #37cf6b;">
+                                    <font><Font size="16.0"/></font>
+                                </Text>
 
-        <TextArea fx:id="txtDescripcion" editable="false" layoutX="47.0" layoutY="313.0" prefHeight="81.0" prefWidth="329.0" style="-fx-background-color: #6E511E;">
-            <effect>
-                <ColorAdjust brightness="-0.26" contrast="0.07" hue="-0.41" saturation="-0.35" />
-            </effect>
-        </TextArea>
+                                <!-- Botón volver -->
+                                <Button fx:id="btnVolver"
+                                        text="Volver"
+                                        onAction="#volverMenu1"
+                                        style="-fx-background-color: #c94c4c;
+                                               -fx-text-fill: white;
+                                               -fx-font-weight: bold;
+                                               -fx-background-radius: 8;
+                                               -fx-padding: 6 18;"/>
+                            </children>
+                        </HBox>
+                    </top>
 
-        <Text layoutX="78.0" layoutY="307.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descripcion" textAlignment="CENTER" wrappingWidth="266.0">
-            <font><Font name="Sitka Display" size="31.0" /></font>
-        </Text>
+                    <!-- CENTRO: productos + carrito -->
+                    <center>
+                        <HBox spacing="20.0">
+                            <children>
 
-        <!-- Botón añadir al carrito -->
-        <Button layoutX="452.0" layoutY="37.0" mnemonicParsing="false" onAction="#agregarAlCarrito" prefHeight="25.0" prefWidth="99.0" text="Añadir carrito" />
+                                <!-- COLUMNA IZQUIERDA: Productos + descripción -->
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <Text text="Lista de productos"
+                                              style="-fx-fill: #9faac7;">
+                                            <font><Font size="14.0"/></font>
+                                        </Text>
 
-        <!-- Tabla del carrito -->
-        <TableView fx:id="tablaCarrito" layoutX="377.0" layoutY="69.0" prefHeight="202.0" prefWidth="221.0">
-            <columns>
-                <TableColumn fx:id="colCarritoNombre" editable="false" prefWidth="90.0" text="carrito" />
-                <TableColumn fx:id="colCarritoPrecio" editable="false" prefWidth="60.0" text="Precios" />
-            <TableColumn fx:id="colCarritoCantidad" editable="false" prefWidth="70.0" text="Cantidad" />
-            </columns>
-        </TableView>
+                                        <!-- Tabla de productos -->
+                                        <TableView fx:id="tablaProductos"
+                                                   prefWidth="360.0"
+                                                   prefHeight="280.0"
+                                                   style="-fx-background-color: transparent;
+                                                          -fx-control-inner-background: rgba(10,17,35,0.95);
+                                                          -fx-border-color: #1391EB;
+                                                          -fx-border-radius: 10;
+                                                          -fx-background-radius: 10;">
+                                            <columns>
+                                                <TableColumn fx:id="colId" text="ID" prefWidth="55.0"/>
+                                                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="100.0"/>
+                                                <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="90.0"/>
+                                                <TableColumn fx:id="colCantidad" text="Stock" prefWidth="60.0"/>
+                                                <TableColumn fx:id="colPrecio" text="Precio" prefWidth="80.0"/>
+                                            </columns>
+                                        </TableView>
 
-        <!-- Botones carrito -->
-        <Button layoutX="438.0" layoutY="287.0" mnemonicParsing="false" onAction="#eliminarDelCarrito" prefHeight="25.0" prefWidth="99.0" style="-fx-background-color: #C7041D;" text="Eliminar" />
+                                        <!-- Descripción del producto -->
+                                        <Text text="Descripción"
+                                              style="-fx-fill: #9faac7;">
+                                            <font><Font size="14.0"/></font>
+                                        </Text>
 
-        <Button layoutX="438.0" layoutY="315.0" mnemonicParsing="false" onAction="#vaciarCarrito" prefHeight="25.0" prefWidth="99.0" style="-fx-background-color: #C7041D;" text="Vaciar" />
+                                        <TextArea fx:id="txtDescripcion"
+                                                  editable="false"
+                                                  wrapText="true"
+                                                  prefWidth="360.0"
+                                                  prefHeight="90.0"
+                                                  style="-fx-background-radius: 10;
+                                                         -fx-control-inner-background: #111828;
+                                                         -fx-text-fill: #dce3ff;"/>
+                                    </children>
+                                </VBox>
 
-        <Text fx:id="lblMontoTotal" fill="#138025" layoutX="280.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Monto Total $ 0" />
+                                <!-- COLUMNA DERECHA: Carrito -->
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                            <children>
+                                                <Text text="Carrito"
+                                                      style="-fx-fill: #9faac7;">
+                                                    <font><Font size="14.0"/></font>
+                                                </Text>
 
-        <Button fx:id="btnIrAPagar" layoutX="430.0" layoutY="349.0" mnemonicParsing="false" onAction="#irAPagar" prefHeight="46.0" prefWidth="116.0" style="-fx-background-color: #65BA6D;" text="Ir a pagar" />
+                                                <Region HBox.hgrow="ALWAYS"/>
+
+                                                <!-- Botón añadir al carrito (desde selección de la izquierda) -->
+                                                <Button text="Añadir"
+                                                        onAction="#agregarAlCarrito"
+                                                        style="-fx-background-color: #1391EB;
+                                                               -fx-text-fill: white;
+                                                               -fx-font-weight: bold;
+                                                               -fx-background-radius: 8;
+                                                               -fx-padding: 4 10;"/>
+                                            </children>
+                                        </HBox>
+
+                                        <!-- Tabla del carrito -->
+                                        <TableView fx:id="tablaCarrito"
+                                                   prefWidth="320.0"
+                                                   prefHeight="280.0"
+                                                   style="-fx-background-color: transparent;
+                                                          -fx-control-inner-background: rgba(10,17,35,0.95);
+                                                          -fx-border-color: #1391EB;
+                                                          -fx-border-radius: 10;
+                                                          -fx-background-radius: 10;">
+                                            <columns>
+                                                <TableColumn fx:id="colCarritoNombre" text="Producto" prefWidth="150.0"/>
+                                                <TableColumn fx:id="colCarritoPrecio" text="Precio" prefWidth="80.0"/>
+                                                <TableColumn fx:id="colCarritoCantidad" text="Cant." prefWidth="70.0"/>
+                                            </columns>
+                                        </TableView>
+
+                                        <!-- Botones carrito -->
+                                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                                            <children>
+                                                <Button text="Eliminar"
+                                                        onAction="#eliminarDelCarrito"
+                                                        style="-fx-background-color: #c94c4c;
+                                                               -fx-text-fill: white;
+                                                               -fx-font-weight: bold;
+                                                               -fx-background-radius: 8;
+                                                               -fx-padding: 6 12;"/>
+
+                                                <Button text="Vaciar"
+                                                        onAction="#vaciarCarrito"
+                                                        style="-fx-background-color: #c94c4c;
+                                                               -fx-text-fill: white;
+                                                               -fx-font-weight: bold;
+                                                               -fx-background-radius: 8;
+                                                               -fx-padding: 6 12;"/>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+
+                            </children>
+                        </HBox>
+                    </center>
+
+                    <!-- BOTTOM: error + Ir a pagar -->
+                    <bottom>
+                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                            <children>
+
+                                <!-- Mensaje error -->
+                                <Text fx:id="textoerror"
+                                      text=""
+                                      style="-fx-fill: #ff5959;"
+                                      wrappingWidth="400.0">
+                                    <font><Font size="13.0"/></font>
+                                </Text>
+
+                                <Region HBox.hgrow="ALWAYS"/>
+
+                                <!-- Botón ir a pagar -->
+                                <Button fx:id="btnIrAPagar"
+                                        text="Ir a pagar"
+                                        onAction="#irAPagar"
+                                        style="-fx-background-color: #4caf50;
+                                               -fx-text-fill: white;
+                                               -fx-font-weight: bold;
+                                               -fx-background-radius: 10;
+                                               -fx-padding: 8 18;"/>
+                            </children>
+                        </HBox>
+                    </bottom>
+
+                </BorderPane>
+            </children>
+        </StackPane>
     </children>
-</AnchorPane>
+</StackPane>

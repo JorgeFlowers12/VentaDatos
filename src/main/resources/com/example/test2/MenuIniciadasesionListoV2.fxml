@@ -61,7 +61,7 @@
                                 <VBox alignment="CENTER" spacing="14.0">
                                     <children>
 
-                                        <Button fx:id="comprabotoon" maxWidth="260.0" style="-fx-background-color: #1391EB; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-padding: 10 0 10 0;" text="Comprar" />
+                                        <Button maxWidth="260.0" onAction="#compraaaboton" style="-fx-background-color: #1391EB; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-padding: 10 0 10 0;" text="Comprar" />
 
                                         <Button maxWidth="260.0" onAction="#VerBoletas" style="-fx-background-color: #1391EB; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15; -fx-padding: 10 12 10 12;" text="Ver historial de compras" wrapText="true" />
                               <Hyperlink fx:id="RegistroMuebleslink" onAction="#VentanaRegistroDeMuebles" text="Registro de Muebles" />

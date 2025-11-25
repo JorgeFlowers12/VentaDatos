@@ -12,11 +12,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<fx:root fx:id="root" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom, #141e30, #243b55);" type="AnchorPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.test2.VentanaGrafico">
+<AnchorPane fx:id="root"
+            prefHeight="600.0"
+            prefWidth="900.0"
+            style="-fx-background-color: linear-gradient(to bottom, #141e30, #243b55);"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.test2.VentanaGrafico">
 
     <children>
         <!-- Contenedor central -->
-        <StackPane prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <StackPane prefHeight="600.0" prefWidth="900.0"
+                   AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0"
+                   AnchorPane.topAnchor="0.0">
             <children>
 
                 <!-- Tarjeta -->
@@ -24,7 +34,10 @@
                     <children>
 
                         <!-- Fondo de la tarjeta -->
-                        <Rectangle arcHeight="30.0" arcWidth="30.0" height="480.0" style="-fx-fill: rgba(15,22,40,0.95);" width="760.0" />
+                        <Rectangle arcHeight="30.0" arcWidth="30.0"
+                                   height="480.0"
+                                   style="-fx-fill: rgba(15,22,40,0.95);"
+                                   width="760.0" />
 
                         <!-- Contenido de la tarjeta -->
                         <VBox spacing="18.0">
@@ -40,16 +53,18 @@
                                         <!-- Título -->
                                         <VBox spacing="4.0">
                                             <children>
-                                                <Label style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" text="Panel de ventas" />
+                                                <Label style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"
+                                                       text="Panel de ventas" />
 
-                                                <Label style="-fx-text-fill: #9faac7; -fx-font-size: 13px;" text="Visualiza las ventas diarias y mensuales" />
+                                                <Label style="-fx-text-fill: #9faac7; -fx-font-size: 13px;"
+                                                       text="Visualiza las ventas diarias y mensuales" />
                                             </children>
                                         </VBox>
 
                                         <!-- Espaciador -->
                                         <Label prefWidth="200.0" text="" />
 
-                                        <!-- Selector tipo de vista -->
+                                        <!-- Selector tipo de vista (futuro: botones día/mes) -->
                                         <VBox spacing="4.0" />
 
                                     </children>
@@ -57,16 +72,21 @@
 
                                 <!-- Gráfico -->
                                 <BorderPane prefHeight="320.0">
-                           <left>
-                                        <LineChart fx:id="chartVentas" animated="false" legendVisible="true" prefHeight="300.0" prefWidth="700.0" BorderPane.alignment="CENTER">
+                                    <left>
+                                        <LineChart fx:id="lineChartVentas"
+                                                   animated="false"
+                                                   legendVisible="true"
+                                                   prefHeight="300.0"
+                                                   prefWidth="700.0"
+                                                   BorderPane.alignment="CENTER">
                                             <xAxis>
-                                                <CategoryAxis fx:id="axisX" label="Fecha" />
+                                                <CategoryAxis fx:id="ejeX" label="Fecha" />
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis fx:id="axisY" label="Monto (CLP)" />
+                                                <NumberAxis fx:id="ejeY" label="Monto (CLP)" />
                                             </yAxis>
                                         </LineChart>
-                           </left>
+                                    </left>
                                 </BorderPane>
 
                                 <!-- Resumen inferior -->
@@ -75,22 +95,40 @@
 
                                         <VBox spacing="4.0">
                                             <children>
-                                                <Label style="-fx-text-fill: #9faac7; -fx-font-size: 11px;" text="Ventas hoy" />
-                                                <Label fx:id="lblVentasHoy" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="" />
+                                                <Label style="-fx-text-fill: #9faac7; -fx-font-size: 11px;"
+                                                       text="Ventas hoy" />
+                                                <Label fx:id="lblVentasHoy"
+                                                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"
+                                                       text="" />
                                             </children>
                                         </VBox>
 
                                         <VBox spacing="4.0">
                                             <children>
-                                                <Label style="-fx-text-fill: #9faac7; -fx-font-size: 11px;" text="Ventas este mes" />
-                                                <Label fx:id="lblVentasMes" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
+                                                <Label style="-fx-text-fill: #9faac7; -fx-font-size: 11px;"
+                                                       text="Ventas este mes" />
+                                                <Label fx:id="lblVentasMes"
+                                                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"
+                                                       text="" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="4.0">
+                                            <children>
+                                                <Label style="-fx-text-fill: #9faac7; -fx-font-size: 11px;"
+                                                       text="Usuarios registrados" />
+                                                <Label fx:id="lblUsuariosRegistrados"
+                                                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"
+                                                       text="0" />
                                             </children>
                                         </VBox>
 
                                         <VBox spacing="4.0">
                                             <children>
-                                                <Label style="-fx-text-fill: #9faac7; -fx-font-size: 11px;" text="Total registros" />
-                                                <Label fx:id="lblTotalRegistros" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="0" />
+                                                <Label style="-fx-text-fill: #9faac7; -fx-font-size: 11px;"
+                                                       text="Total registros" />
+                                                <Label fx:id="lblTotalRegistros"
+                                                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"
+                                                       text="0" />
                                             </children>
                                         </VBox>
 
@@ -106,4 +144,4 @@
             </children>
         </StackPane>
     </children>
-</fx:root>
+</AnchorPane>

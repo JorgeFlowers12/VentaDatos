@@ -1,94 +1,215 @@
-package com.example.test2;// VentanaGrafico.java
-import javax.swing.*;
-import java.awt.*;
+package com.example.test2;
 
-public class VentanaGrafico extends JFrame {
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 
-    private final String[] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun",
-            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
-    private final int[] ventas = {45, 68, 58, 82, 95, 110, 125, 105, 98, 115, 130, 145};
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-    public VentanaGrafico() {
-        setTitle("Gráficos de Ventas 2025");
-        setSize(1100, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+public class VentanaGrafico implements Initializable {
 
-        add(new PanelGrafico(), BorderLayout.CENTER);
+    // ====== Formato CLP ======
+    private static final NumberFormat formatoCL =
+            NumberFormat.getInstance(new Locale("es", "CL"));
+
+    // ====== Gráfico ======
+    @FXML private LineChart<String, Number> lineChartVentas;
+    @FXML private CategoryAxis ejeX;
+    @FXML private NumberAxis ejeY;
+
+    // ====== Resumen inferior ======
+    @FXML private Label lblVentasHoy;          // CLP hoy
+    @FXML private Label lblVentasMes;          // CLP mes
+    @FXML private Label lblUsuariosRegistrados;// usuarios creados hoy
+    @FXML private Label lblTotalRegistros;     // total boletas
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (ejeX != null) ejeX.setLabel("Fecha");
+        if (ejeY != null) ejeY.setLabel("Monto (CLP)");
+
+        cargarGraficoPorDia();      // Ventas por día
+        cargarUsuariosPorDia();     // Usuarios registrados por día
+        cargarResumen();            // Labels de abajo
     }
 
-    private class PanelGrafico extends JPanel {
-        public PanelGrafico() {
-            setBackground(Color.WHITE);
+    // =====================================================
+    //   VENTAS AGRUPADAS POR DÍA
+    // =====================================================
+    private void cargarGraficoPorDia() {
+        if (lineChartVentas == null) return;
+
+        lineChartVentas.getData().clear();
+
+        XYChart.Series<String, Number> serie = new XYChart.Series<>();
+        serie.setName("Ventas por día");
+
+        String sql =
+                "SELECT DATE(Hora_de_venta) AS dia, " +
+                        "       SUM(Precio_Total) AS total_dia " +
+                        "FROM venta " +
+                        "GROUP BY DATE(Hora_de_venta) " +
+                        "ORDER BY dia";
+
+        Connection cn = ConexionBD.conectar();
+        if (cn == null) {
+            System.out.println(" No se pudo conectar para cargar ventas por día.");
+            return;
         }
 
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            dibujarGraficoBarras(g);
+        try (cn;
+             PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String fecha = rs.getDate("dia").toString();
+                double total = rs.getDouble("total_dia");
+                serie.getData().add(new XYChart.Data<>(fecha, total));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error cargando gráfico de ventas por día: " + e.getMessage());
         }
 
-        private void dibujarGraficoBarras(Graphics g) {
-            int ancho = getWidth();
-            int alto = getHeight();
+        lineChartVentas.getData().add(serie);
+    }
 
-            int margenIzq = 80;
-            int margenInf = 100;
-            int margenDer = 50;
-            int margenSup = 60;
+    // =====================================================
+    //   USUARIOS REGISTRADOS POR DÍA (cantidad)
+    // =====================================================
+    private void cargarUsuariosPorDia() {
+        if (lineChartVentas == null) return;
 
-            int anchoUtil = ancho - margenIzq - margenDer;
-            int altoUtil = alto - margenSup - margenInf;
+        XYChart.Series<String, Number> serie = new XYChart.Series<>();
+        serie.setName("Usuarios registrados por día");
 
-            // Valor máximo para escalar
-            int maximo = 150; // lo pongo fijo para que sea más bonito
+        String sql =
+                "SELECT Fecha_creacion_de_cuenta AS dia, " +
+                        "       COUNT(*) AS total " +
+                        "FROM usuario " +
+                        "GROUP BY Fecha_creacion_de_cuenta " +
+                        "ORDER BY dia";
 
-            // Ejes
-            g.setColor(Color.BLACK);
-            g.drawLine(margenIzq, margenSup, margenIzq, alto - margenInf);                    // Y
-            g.drawLine(margenIzq, alto - margenInf, ancho - margenDer, alto - margenInf);    // X
+        Connection cn = ConexionBD.conectar();
+        if (cn == null) {
+            System.out.println("❌ No se pudo conectar para cargar usuarios por día.");
+            return;
+        }
 
-            // Marcas y etiquetas eje Y
-            g.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-            for (int i = 0; i <= 10; i++) {
-                int y = alto - margenInf - (altoUtil * i / 10);
-                g.drawLine(margenIzq - 8, y, margenIzq, y);
-                g.drawString(String.valueOf(i * 15), margenIzq - 45, y + 5);
+        try (cn;
+             PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String fecha = rs.getDate("dia").toString();
+                int total = rs.getInt("total");
+                serie.getData().add(new XYChart.Data<>(fecha, total));
             }
 
-            // Dibujar las barras
-            int anchoBarra = anchoUtil / meses.length;
-            for (int i = 0; i < meses.length; i++) {
-                int x = margenIzq + i * anchoBarra;
-                int altura = (ventas[i] * altoUtil) / maximo;
-                int y = alto - margenInf - altura;
+        } catch (Exception e) {
+            System.out.println("❌ Error cargando gráfico de usuarios por día: " + e.getMessage());
+        }
 
-                // Barra con gradiente bonito
-                Color colorInicio = new Color(0, 123, 255);
-                Color colorFin    = new Color(0, 180, 255);
-                GradientPaint gradiente = new GradientPaint(x, y, colorInicio, x, y + altura, colorFin);
-                ((Graphics2D) g).setPaint(gradiente);
-                g.fillRect(x + 15, y, anchoBarra - 30, altura);
+        // Se agrega la serie encima de la de ventas
+        lineChartVentas.getData().add(serie);
+    }
 
-                // Borde
-                g.setColor(Color.BLACK);
-                g.drawRect(x + 15, y, anchoBarra - 30, altura);
+    // =====================================================
+    //   RESUMEN: ventas hoy, este mes, usuarios hoy, total ventas
+    // =====================================================
+    private void cargarResumen() {
 
-                // Valor encima de la barra
-                g.drawString(ventas[i] + "k", x + anchoBarra/2 - 15, y - 10);
+        String sqlVentasHoy =
+                "SELECT IFNULL(SUM(Precio_Total), 0) AS total " +
+                        "FROM venta " +
+                        "WHERE DATE(Hora_de_venta) = CURDATE()";
 
-                // Etiqueta del mes
-                g.drawString(meses[i], x + anchoBarra/2 - 15, alto - margenInf + 25);
+        String sqlVentasMes =
+                "SELECT IFNULL(SUM(Precio_Total), 0) AS total " +
+                        "FROM venta " +
+                        "WHERE YEAR(Hora_de_venta) = YEAR(CURDATE()) " +
+                        "  AND MONTH(Hora_de_venta) = MONTH(CURDATE())";
+
+        String sqlTotalRegistros =
+                "SELECT COUNT(*) AS total FROM venta";
+
+        // 🔹 Usuarios registrados HOY en la tabla usuario
+        String sqlUsuariosHoy =
+                "SELECT COUNT(*) AS total " +
+                        "FROM usuario " +
+                        "WHERE Fecha_creacion_de_cuenta = CURDATE()";
+
+        Connection cn = ConexionBD.conectar();
+        if (cn == null) {
+            System.out.println("❌ No se pudo conectar para cargar resumen.");
+            return;
+        }
+
+        try (cn) {
+            // Ventas hoy
+            try (PreparedStatement ps = cn.prepareStatement(sqlVentasHoy);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next() && lblVentasHoy != null) {
+                    lblVentasHoy.setText("CLP: " + formatoCL.format(rs.getInt("total")));
+                }
             }
 
-            // Título
-            g.setColor(new Color(0, 102, 204));
-            g.setFont(new Font("Segoe UI", Font.BOLD, 22));
-            g.drawString("VENTAS MENSUALES 2025", ancho/2 - 150, 40);
+            // Ventas este mes
+            try (PreparedStatement ps = cn.prepareStatement(sqlVentasMes);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next() && lblVentasMes != null) {
+                    lblVentasMes.setText("CLP: " + formatoCL.format(rs.getInt("total")));
+                }
+            }
+
+            // Usuarios registrados HOY
+            try (PreparedStatement ps = cn.prepareStatement(sqlUsuariosHoy);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next() && lblUsuariosRegistrados != null) {
+                    lblUsuariosRegistrados.setText(
+                            String.valueOf(rs.getInt("total"))
+                    );
+                }
+            }
+
+            // Total registros (boletas)
+            try (PreparedStatement ps = cn.prepareStatement(sqlTotalRegistros);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next() && lblTotalRegistros != null) {
+                    lblTotalRegistros.setText(
+                            String.valueOf(rs.getInt("total"))
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("❌ Error cargando resumen: " + e.getMessage());
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new VentanaGrafico().setVisible(true));
+    // =====================================================
+    //   (Opcional) Botones si quieres refrescar o cambiar vista
+    // =====================================================
+    @FXML
+    private void verVentasPorDia() {
+        cargarGraficoPorDia();
+        cargarUsuariosPorDia(); // volvemos a añadir la serie de usuarios
+    }
+
+    @FXML
+    private void refrescarPanel() {
+        cargarGraficoPorDia();
+        cargarUsuariosPorDia();
+        cargarResumen();
     }
 }

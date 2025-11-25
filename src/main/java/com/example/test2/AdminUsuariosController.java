@@ -53,18 +53,20 @@ public class AdminUsuariosController implements Initializable {
     // nombreSucursal → Id_Sucursales
     private final Map<String, Integer> mapaSucursales = new HashMap<>();
 
+    // Botón volver
+    @FXML private Button salirboton1;
+
     // ==========================
     //  INIT
     // ==========================
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         configurarColumnas();
-        configurarEdicionColumnas();   // 👈 para editar rut, nombre, etc.
+        configurarEdicionColumnas();
         cargarRoles();
         cargarSucursales();
         cargarUsuarios();
 
-        // Cuando seleccionas un usuario en la tabla
         tablaUsuarios.getSelectionModel().selectedItemProperty().addListener(
                 (obs, viejo, nuevo) -> mostrarUsuarioSeleccionado(nuevo)
         );
@@ -150,27 +152,18 @@ public class AdminUsuariosController implements Initializable {
         });
     }
 
-    /**
-     * Actualiza un solo campo de la tabla Usuario en la BD.
-     * @param columna nombre de la columna (Id_Usuario, Nombre, Email, ...)
-     * @param nuevoValor valor que quieres guardar
-     * @param idUsuarioActual ID actual (para el WHERE)
-     * @return true si el UPDATE fue bien, false si hubo error
-     */
     private boolean actualizarCampoUsuario(String columna, String nuevoValor, String idUsuarioActual) {
         String sql = "UPDATE Usuario SET " + columna + " = ? WHERE Id_Usuario = ?";
 
         try (Connection conn = ConexionBD.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // Si estamos cambiando el RUT (PK entero)
             if ("Id_Usuario".equalsIgnoreCase(columna)) {
                 int nuevoId = Integer.parseInt(nuevoValor);
                 int viejoId = Integer.parseInt(idUsuarioActual);
                 stmt.setInt(1, nuevoId);
                 stmt.setInt(2, viejoId);
             } else {
-                // Campos tipo VARCHAR
                 stmt.setString(1, nuevoValor);
                 stmt.setInt(2, Integer.parseInt(idUsuarioActual));
             }
@@ -189,8 +182,9 @@ public class AdminUsuariosController implements Initializable {
     // ==========================
     //  CARGA DE DATOS DESDE BD
     // ==========================
-
     private void cargarRoles() {
+        if (cbRol == null) return;
+
         cbRol.getItems().clear();
         mapaRoles.clear();
 
@@ -215,6 +209,8 @@ public class AdminUsuariosController implements Initializable {
     }
 
     private void cargarSucursales() {
+        if (cbSucursal == null) return;
+
         cbSucursal.getItems().clear();
         mapaSucursales.clear();
 
@@ -276,7 +272,6 @@ public class AdminUsuariosController implements Initializable {
                 int idSucursal     = rs.getInt("Id_Sucursales");
                 String sucursal    = rs.getString("localidad");
 
-                // Password lo dejamos vacío (no se muestra)
                 DatosControlador user = new DatosControlador(
                         idUsuario, nombre, apellido,
                         email, telefono, "",
@@ -302,7 +297,7 @@ public class AdminUsuariosController implements Initializable {
         if (lblUsuarioSeleccionado == null) return;
 
         if (u == null) {
-            lblUsuarioSeleccionado.setText("usuario seleccionado");
+            lblUsuarioSeleccionado.setText("(ninguno)");
             if (cbRol != null) cbRol.getSelectionModel().clearSelection();
             if (cbSucursal != null) cbSucursal.getSelectionModel().clearSelection();
             return;
@@ -315,7 +310,7 @@ public class AdminUsuariosController implements Initializable {
     }
 
     // ==========================
-    //  GUARDAR CAMBIOS ROL/SUCURSAL (BOTÓN APLICAR CAMBIOS)
+    //  GUARDAR CAMBIOS ROL/SUCURSAL
     // ==========================
     @FXML
     private void guardarCambiosRolSucursal() {
@@ -371,7 +366,7 @@ public class AdminUsuariosController implements Initializable {
     }
 
     // ==========================
-    //  ELIMINAR CUENTA (BOTÓN)
+    //  ELIMINAR CUENTA
     // ==========================
     @FXML
     private void EliminarCuenta() {
@@ -400,19 +395,17 @@ public class AdminUsuariosController implements Initializable {
                 lblMensaje.setText("Error al eliminar (puede tener ventas asociadas)");
         }
     }
-    @FXML
-    private Button salirboton1;
+
+    // ==========================
+    //  VOLVER AL MENÚ
+    // ==========================
     @FXML
     private void VolverMenu2() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("ventanaIniciadalista.fxml"));
-
-
+            Parent root = FXMLLoader.load(getClass().getResource("MenuiniciadasesionListoV2.fxml"));
             Stage stage = (Stage) salirboton1.getScene().getWindow();
-
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

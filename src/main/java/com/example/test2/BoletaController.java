@@ -199,7 +199,7 @@ public class BoletaController implements Initializable {
     private void volver(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("VentanaIniciadaLista.fxml")
+                    getClass().getResource("MenuiniciadasesionListoV2.fxml")
             );
             Parent root = loader.load();
 
@@ -226,7 +226,7 @@ public class BoletaController implements Initializable {
     private void volveralmenu(ActionEvent event) {
         try {
             // Cargar la nueva ventana
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("VentanaIniciadalista.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MenuiniciadasesionListoV2.fxml"));
             Parent root = loader.load();
 
             // Obtener la ventana actual desde el botón (o control) que disparó el evento

@@ -59,7 +59,6 @@ public class ControladorVentanas {
             registrousuariooo.setManaged(esAdmin);
             /// -----------------------
             /// -----------------------
-            RegistroMuebleslink.setDisable(false);
 
 
         }
@@ -339,7 +338,7 @@ public class ControladorVentanas {
     }
 
     @FXML
-    private void compraaa(ActionEvent event){
+    private void compraaaboton(ActionEvent event){
         cambiarAVentana("MenuMuebles",event);
     }
 
@@ -361,6 +360,6 @@ private void VentanaRegistroDeMuebles(ActionEvent event){
 }
     @FXML
     private void VerBoletas(ActionEvent event){
-        cambiarAVentana("VerBoletas",event);
+        cambiarAVentana("BoletaTablaV2",event);
     }
 }
